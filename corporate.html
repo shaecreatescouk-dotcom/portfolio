@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shae Clarke - Videography & Photography</title>
+    <meta name="description" content="Professional videography and photography services by Shae Clarke">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+<nav class="fixed top-0 w-full bg-black/95 backdrop-blur-sm z-50 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Your Logo -->
+                <div class="flex items-center gap-3">
+                    <img src="images/logos/logo.png" alt="Shae Clarke Logo" class="h-12">
+                    <!-- If logo doesn't load, uncomment text below:
+                    <span class="font-bold text-2xl">Shae Clarke</span>
+                    -->
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <a href="#home" onclick="showSection('home')" class="font-medium hover:text-white/60 transition">Home</a>
+                    <a href="#work" onclick="showSection('work')" class="font-medium hover:text-white/60 transition">Work</a>
+                    <a href="#services" onclick="showSection('services')" class="font-medium hover:text-white/60 transition">Services</a>
+                    <a href="#contact" onclick="showSection('contact')" class="font-medium hover:text-white/60 transition">Contact</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMenu()" class="md:hidden">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-black border-t border-white/10">
+            <a href="#home" onclick="showSection('home'); toggleMenu()" class="block px-4 py-3 hover:bg-white/5">Home</a>
+            <a href="#work" onclick="showSection('work'); toggleMenu()" class="block px-4 py-3 hover:bg-white/5">Work</a>
+            <a href="#services" onclick="showSection('services'); toggleMenu()" class="block px-4 py-3 hover:bg-white/5">Services</a>
+            <a href="#contact" onclick="showSection('contact'); toggleMenu()" class="block px-4 py-3 hover:bg-white/5">Contact</a>
+        </div>
+    </nav>
+
+<section class="pt-32 pb-20 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-6xl font-bold mb-4">Corporate</h2>
+      <p class="text-white/60 text-lg">Headshots • Events</p>
+    </div>
+
+    \1
+      <div id="photos-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20"></div>
+    \2
+      <div class="h-72 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-white/40">Photo 2</div>
+      <div class="h-72 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-white/40">Photo 3</div>
+    </div>
+
+    \1<div id="videos-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <div class="h-72 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-white/40">Video 2</div>
+      <div class="h-72 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-white/40">Video 3</div>
+    </div>
+
+    <div class="text-center mt-14">
+      <a href="index.html#work" class="inline-block bg-white text-black px-10 py-4 rounded-full hover:scale-105 transition font-medium">
+        ← Back to Portfolio
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-white/10 py-10 px-4 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <img src="images/logos/logo-with-text.png" alt="Shae Clarke" class="h-12">
+            <!-- EDIT: Copyright text -->
+            <p class="text-white/40">&copy; 2026 Shae Clarke. All rights reserved.</p>
+        </div>
+    </footer>
+
+<script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function sendMessage() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            if (name && email && message) {
+                // EDIT: Change this to your email or add form handling service
+                window.location.href = `mailto:shaecreates.co.uk@gmail.com?subject=New inquiry from ${name}&body=${message}`;
+                alert('Opening your email client...');
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+    </script>
+
+<script>
+async function renderGallery(categorySlug) {
+  try {
+    const res = await fetch('data/galleries.json', { cache: 'no-store' });
+    const data = await res.json();
+    const cat = data[categorySlug];
+    if (!cat) return;
+
+    // Photos
+    const photosWrap = document.getElementById('photos-grid');
+    photosWrap.innerHTML = '';
+    (cat.photos || []).forEach(item => {
+      const src = item.image || item; // supports both formats
+      if (!src) return;
+      const img = document.createElement('img');
+      img.src = src;
+      img.loading = 'lazy';
+      img.className = "w-full h-72 object-cover rounded-2xl border border-white/10";
+      photosWrap.appendChild(img);
+    });
+    if ((cat.photos || []).length === 0) {
+      photosWrap.innerHTML = '<div class="h-72 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-white/40">No photos yet — add them in /admin</div>';
+    }
+
+    // Videos
+    const videosWrap = document.getElementById('videos-grid');
+    videosWrap.innerHTML = '';
+    (cat.videos || []).forEach(item => {
+      const src = item.video || item;
+      if (!src) return;
+      const v = document.createElement('video');
+      v.controls = true;
+      v.className = "w-full h-72 rounded-2xl border border-white/10 object-cover";
+      const s = document.createElement('source');
+      s.src = src;
+      s.type = "video/mp4";
+      v.appendChild(s);
+      videosWrap.appendChild(v);
+    });
+    if ((cat.videos || []).length === 0) {
+      videosWrap.innerHTML = '<div class="h-72 bg-white/5 rounded-2xl border border-white/10 flex items-center justify-center text-white/40">No videos yet — add them in /admin</div>';
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+</script>
+<script>renderGallery('corporate');</script>
+</body>
+</html>
